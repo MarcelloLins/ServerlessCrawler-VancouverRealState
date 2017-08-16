@@ -15,3 +15,7 @@ An Amazon Web Services Account, some python knowledge
 * AWS Lambda for the processing of the HTML pages and data scraping
 * DynamoDB for caching the urls to be captured, and to trigger lambda functions
 * RDS MySQL as the end database for the processed and structured data to be stored
+
+# About Me
+Marcello Lins is passionate about technology and crunching data for fun. Feel free to connect with me through Linkedin and find more about what I'm working at via my [AboutMe Profile](http://www.about.me/marcellolins).
+Visit https://techflow.me/ for more awesomeness !

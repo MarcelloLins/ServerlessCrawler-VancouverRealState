@@ -11,7 +11,7 @@ We can leverage the Free Tier of 3 out of the 4 AWS services used on the project
 An Amazon Web Services Account, some python knowledge
 
 ## What is the Tech Stack behind this?
-1 - AWS SNS to trigger the capture process
-2 - AWS Lambda for the processing of the HTML pages and data scraping
-3 - DynamoDB for caching the urls to be captured, and to trigger lambda functions
-4 - RDS MySQL as the end database for the processed and structured data to be stored
+* AWS SNS to trigger the capture process
+* AWS Lambda for the processing of the HTML pages and data scraping
+* DynamoDB for caching the urls to be captured, and to trigger lambda functions
+* RDS MySQL as the end database for the processed and structured data to be stored

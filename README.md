@@ -1,4 +1,4 @@
-# ServerlessCraler-Vancouver Real State
+# ServerlessCrawler-Vancouver Real State
 ## What is this project all about?
 This project is a showcase of a concept I've been playing with for a while: Serverless Crawlers.
 (If you don't know what a Crawler is, feel free to visit my [Crawler101 Repository](https://github.com/MarcelloLins/WebCrawling101))

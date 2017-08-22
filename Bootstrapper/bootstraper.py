@@ -6,55 +6,55 @@ import requests
 from utils import Utils
 from dynamo_client import DynamoClient
 from parser import Parser
+import os
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 dynamo_client = DynamoClient()
 
-def bootstrap_from_search_page(event, context):
-    logger.info('Received HomePage Url. Parsing Listing Urls')
-    home_page_url = event['Records'][0]['Sns']['Message']
-	
+def bootstrap_cities_page(event, context):
+    home_page_url = os.environ['home_page']
+    target_province = "-" + os.environ['target_province'].lower().strip()
+
+    logging.info('Starting Bootstrapper. Executing request for neighborhood pages')
     response = requests.get(home_page_url)
+
     if response.status_code == requests.codes.ok:
         search_page = response.text
         
-        # Extracting Listings from Home Page
-        urls = Parser.extract_listing_urls(search_page)
+        # Extracting neighborhood urls from initial page
+        neighborhood_urls = Parser.extract_neighborhood_urls(search_page, target_province)
 
-        if len(urls) == 0:
-            logger.info('Found no listings for this area.')
+        if not neighborhood_urls:
+            logging.fatal('Found no neighborhood urls on initial page. Scraper is most likely broken. Aborting')
             return
 
-        # Adding Urls to Dynamo
-        dynamo_client.write_batch(urls)
+        logging.info('Found %d neighborhood urls on initial page' % len(neighborhood_urls))
 
-        # Extracting the index of the last page
-        max_search_pages = Parser.extract_search_pages_count(search_page)
+        # Iterating over Urls
+        processed_neighborhoods = 1
+        total_neighborhoods = len(neighborhood_urls)
+        processed_sub_neighborhoods = 0
+        for neighborhood_url in neighborhood_urls:
+            logging.info('Processing Neighborhood %d out of %d - %s' % (processed_neighborhoods, total_neighborhoods, neighborhood_url))
+            processed_neighborhoods = processed_neighborhoods + 1
 
-        if not max_search_pages:
-            logger.info('Search has only one page worth of results.')
-            return
-
-        logger.info('Total Number of Pages Found: %s' % max_search_pages)
-        for page_idx in range(1, int(max_search_pages)):
-            next_page = page_idx + 1
-
-            # Assembling URL of the next page
-            next_page_url = Utils.get_next_page_url(home_page_url, next_page)
-            logger.info('Parsing page: %d (%s)' % (next_page, next_page_url))
-
-            # Get Request for next page
-            response = requests.get(next_page_url)
-
-            # Sanity Check
+            response = requests.get(neighborhood_url)
             if response.status_code != requests.codes.ok:
-                logger.error('Error while getting page %s [STATUS CODE: %d]' % (next_page_url, response.status_code))
+                logging.warn('Get Request for Page returned NOT OK [%s]' % response.status_code)
                 continue
 
-            # Extracting Listings from current page
-            urls = Parser.extract_listing_urls(response.text)
+            search_page = response.text
+            sub_neighborhood_urls = Parser.extract_neighborhood_urls(search_page, target_province)
+            processed_sub_neighborhoods = processed_sub_neighborhoods + len(sub_neighborhood_urls)
+
+            if not sub_neighborhood_urls:
+                logging.fatal('Found no sub-neighborhood urls for this neighborhood')
+                continue
+
+            logging.info('Found %d sub-neighborhoods' % len(sub_neighborhood_urls))
 
             # Adding Urls to Dynamo
-            dynamo_client.write_batch(urls)
+            dynamo_client.write_batch(sub_neighborhood_urls)
+        logging.info('Finished Processing Pages. A Total of %d sub-neighborhoods were saved for processing' % processed_sub_neighborhoods)

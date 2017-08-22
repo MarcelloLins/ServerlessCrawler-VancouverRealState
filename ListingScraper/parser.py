@@ -9,23 +9,28 @@ class Parser:
 
 	@staticmethod
 	def extract_address(html_map):
-		return html_map.find('span', itemprop='streetAddress').get_text()
+		key_node = html_map.find('span', itemprop='streetAddress')
+		return key_node.get_text() if key_node else None
 
 	@staticmethod
 	def extract_locality(html_map):
-		return html_map.find('span', itemprop='addressLocality').get_text()
+		key_node = html_map.find('span', itemprop='addressLocality')
+		return key_node.get_text() if key_node else None
 
 	@staticmethod
 	def extract_region(html_map):
-		return html_map.find('span', itemprop='addressRegion').get_text()
+		key_node = html_map.find('span', itemprop='addressRegion')
+		return key_node.get_text() if key_node else None
 
 	@staticmethod
 	def extract_postal_code(html_map):
-		return html_map.find('span', itemprop='postalCode').get_text()
+		key_node = html_map.find('span', itemprop='postalCode')
+		return key_node.get_text() if key_node else None
 
 	@staticmethod
 	def extract_price(html_map):
-		return html_map.find('div', class_='propertyheader-price pull-left').get_text().replace('$', '').replace(',','')
+		key_node = html_map.find('div', class_='propertyheader-price pull-left')
+		return key_node.get_text().replace('$', '').replace(',','') if key_node else None
 
 	@staticmethod
 	def extract_summary(html_map):

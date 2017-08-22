@@ -19,5 +19,5 @@ class DynamoClient:
 		with self.current_table.batch_writer() as batch:
 			for item in items:
 				batch.put_item(
-						Item={'listing_url': item, 'processing_date': int(time.time()) + 120} # 2 minutes in the future
+						Item={'neighborhood_url': item, 'ttl': int(time.time()) + 600} # 10 minutes in the future, used for TTL
 					)

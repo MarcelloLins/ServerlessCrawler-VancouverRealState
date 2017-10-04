@@ -1,7 +1,7 @@
 # ServerlessCrawler-Vancouver Real State
 ## What is this project all about?
 This project is a showcase of a concept I've been playing with for a while: Serverless Crawlers.
-(If you don't know what a Crawler is, feel free to visit my [Crawler101 Repository](https://github.com/MarcelloLins/WebCrawling101))
+(If you don't know what a Crawler is, feel free to visit my [Crawler101 Repository](https://github.com/MarcelloLins/WebCrawling101)). The goal and pros/cons of using this architecture can be found on my [medium post](https://medium.com/@marcello.lins/how-to-build-a-scalable-crawler-on-the-cloud-that-can-mine-thousands-of-data-points-costing-less-a9825331eef5)
 
 The goal here was to write an automatic data mining process (crawler) to capture real state data from Greater Vancouver Area listings. The catch? There's no actual server to be maintained. Once this is setup, all you need is a trigger to start the capture, and it runs by itself 100% on #AWS, nearly zero dolars a month.
 
